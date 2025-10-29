@@ -26,11 +26,11 @@ def index():
     return render_template('index.html', title="Welcome", username=studentName)
 
 # About Page
-@app.route('/about/<name>')
-def about(name):
+@app.route('/about')
+def about():
     # Render HTML with the name in a H1 tag
     #name="Abdulhameed R Oseni"
-    return f"<h1>About {name}!</h1><p>It is easy to create new routes</p>"
+    return render_template('about.html', title="About EFSSD")
 
 
 
