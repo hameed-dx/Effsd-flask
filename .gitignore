@@ -1,2 +1,4 @@
 .venv
+.venvSHU
 *__pycache__*
+.vs
