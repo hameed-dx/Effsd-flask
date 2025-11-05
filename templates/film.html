@@ -5,6 +5,7 @@
 
 <!-- Page Content -->
 {% block content %}
+<a href="{{ url_for('update', id=film['id']) }}" class="btn btn-primary mb-3 float-end">Edit</a>
 
     <h1>{{ film['title'] }} ({{ film['release_year'] }})</h1>
     <hr>
