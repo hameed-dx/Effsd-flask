@@ -55,10 +55,31 @@ def register():
     # If the request method is POST, process the form submission
     if request.method == 'POST':
 
-        flash(category='success', message='The Form Was Posted Successfully!')
+        # Get the username and password from the form
+        username = request.form['username']
+        password = request.form['password']
+        repassword = request.form['repassword']
+
+        # Simple validation checks
+        error = None
+        if not username:
+            error = 'Username is required!'
+        elif not password or not repassword:
+            error = 'Password is required!'
+        elif password != repassword:
+            error = 'Passwords do not match!'
+
+        # Display appropriate flash messages
+        if error is None:
+                flash(category='success', message=f"The Form Was Posted Successfully! Well Done {username}")
+        else:
+                flash(category='danger', message=error)
+
+        # [TO-DO]: Add real registration logic here (i.e., save to database)
     
     # If the request method is GET, just render the registration form
     return render_template('register.html', title="Register")
+
 
 
 
