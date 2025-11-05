@@ -1,4 +1,5 @@
 # This code imports the Flask library and some functions from it.
+from db.db import get_all_films, get_film_by_id
 from flask import Flask, render_template, url_for, request, flash, redirect
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import generate_csrf
@@ -109,6 +110,32 @@ def login():
         
     # If the request method is GET, render the login form
     return render_template('login.html', title="Log In")
+
+
+# Films List Page
+@app.route('/films/')
+def films():
+
+    # Get films list data
+    film_list = get_all_films()  
+
+    # Render the films.html template with a list of films
+    return render_template('films.html', title="All Films", films=film_list)
+
+# Film Detail Page
+@app.route('/film/<int:id>/')
+def film(id):
+    
+    # Get film data
+    film_data = get_film_by_id(id)  
+
+    if film_data:
+        return render_template('film.html', title=film_data['title'], film=film_data)
+    else:
+        # If film not found, redirect to films list with a flash message
+        flash(category='warning', message='Requested film not found!')
+        return redirect(url_for('films'))
+
 
 
 
