@@ -2,3 +2,4 @@
 .venvSHU
 *__pycache__*
 .vs
+static/uploads/*

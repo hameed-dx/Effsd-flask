@@ -27,9 +27,13 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                     <a class="nav-link" href="/about">About</a>
-                    <a class="nav-link" href="/contact">contact</a>
-                    <a class="nav-link" href="/register">Register</a>
-                    <a class="nav-link" href="/login">Login</a>
+                    {% if session['user_id'] %}
+                        <a class="nav-link" href="/films">Films</a>
+                        <a class="nav-link" href="/logout">Logout</a>
+                    {% else %}
+                        <a class="nav-link" href="/register">Register</a>
+                        <a class="nav-link" href="/login">Login</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -44,13 +48,13 @@
 
                 <!-- Flash Messages: This will display any error/success/status messages to the user -->
                 {% for category, message in get_flashed_messages(with_categories=True) %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
                 {% endfor %}
-                
+
+
                 {% block content %}
                 <!-- This is where the content from child templates will be inserted -->
                 {% endblock %}
-
 
             </div>
 
@@ -60,24 +64,12 @@
                 <!-- Sidebar Navigation Links -->
                 <div class="card">
                     <div class="card-header">
-                        Sidebar Card
+                        Sidebar Card 
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">About Us</h5>
                         <p class="card-text">We have another page</p>
                         <a href="/about" class="btn btn-primary">Go There</a>
-                    </div>
-                </div>
-
-                <!-- Sidebar Navigation Links -->
-                <div class="card">
-                    <div class="card-header">
-                        Sidebar Card
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">contact Us</h5>
-                        <p class="card-text">We have another page</p>
-                        <a href="/contact" class="btn btn-primary">Go There</a>
                     </div>
                 </div>
 

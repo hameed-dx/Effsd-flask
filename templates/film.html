@@ -5,7 +5,10 @@
 
 <!-- Page Content -->
 {% block content %}
-<a href="{{ url_for('update', id=film['id']) }}" class="btn btn-primary mb-3 float-end">Edit</a>
+
+    {% if session['user_id'] == film['user'] %}
+        <a href="{{ url_for('update', id=film['id']) }}" class="btn btn-primary mb-3 float-end">Edit</a>
+    {% endif %}
 
     <h1>{{ film['title'] }} ({{ film['release_year'] }})</h1>
     <hr>
@@ -49,7 +52,11 @@
     <!-- Back to all films card -->
     <div class="card text-center mt-3">
         <div class="card-body">
-            <a href="{{ url_for('films') }}" class="btn btn-secondary w-100">Back to All Films</a>
+            {% if session['user_id'] == film['user'] %}
+                <a href="{{ url_for('films') }}" class="btn btn-secondary w-100">Back to All Films</a>
+            {% else %}
+                <a href="{{ url_for('userFilms', user_id=film['user']) }}" class="btn btn-secondary w-100">Back to {{ film['user']|get_username }}'s Films</a>
+            {% endif %}
         </div>
     </div>
 

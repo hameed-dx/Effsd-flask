@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-<!--Page Content -->
+<!-- Page Content -->
 {% block content %}
 
     <h1>Update Film</h1>
@@ -10,46 +10,47 @@
     <form method="post" enctype="multipart/form-data" class="row g-3">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
+
         <div class="col-lg-9">
-            <!--Film Title textinput -->
+            <!-- Film Title textinput -->
             <div class="form-floating">
                 <input name="title" type="text" class="form-control" id="title" placeholder="Film Title" value="{{ film['title'] }}">
                 <label for="title">Film Title</label>
             </div>
         </div>
         <div class="col-lg-3">
-            <!--Release Year number input (with min and max attributes) -->
+            <!-- Release Year number input (with min and max attributes) -->
             <div class="form-floating">
                 <input name="release_year" type="number" class="form-control" id="release_year" placeholder="Release Year" min="1900" max="2100" value="{{ film['release_year'] }}">
                 <label for="release_year">Release Year</label>
             </div>
         </div>
         <div class="col-12">
-            <!--Film Tag Line textinput -->
+            <!-- Film Tag Line textinput -->
             <div class="form-floating">
                 <input name="tagline" type="text" class="form-control" id="tagline" placeholder="Film Tag Line" value="{{ film['tagline'] }}">
                 <label for="tagline">Film Tag Line</label>
             </div>
         </div>
         <div class="col-12">
-            <!--Director textinput -->
+            <!-- Director textinput -->
             <div class="form-floating">
                 <input name="director" type="text" class="form-control" id="director" placeholder="Director" value="{{ film['director'] }}">
                 <label for="director">Director</label>
             </div>
         </div>
         <div class="col-12 mt-0">
-            <!--Film poster file upload-->
+            <!-- Film poster file upload-->
             <div class="d-flex flex-sm-row align-items-center justify-content-center mt-3 gap-2">
                 <label for="poster">Poster/Image</label>
-                <input name="poster" type="text" accept="image/*" class="form-control" id="poster" placeholder="Film Poster" value="{{ film['poster'] }}">
+                <input name="poster" type="file" accept="image/*" class="form-control" id="poster" placeholder="Film Poster" value="{{ film['poster'] }}">
             </div>
         </div>
         <div class="col-lg-5">
-            <!--Genre select with predefined options -->
+            <!-- Genre select with predefined options -->
             <div class="form-floating">
                 <select name="genre" class="form-select" id="genre" aria-label="Genre select">
-                    <option value="" {% if film['genre'] == "" %}selected{% endif %}>Select Genre</option>''
+                    <option value="" {% if film['genre'] == "" %}selected{% endif %}>Select Genre</option>
                     <option value="Action" {% if film['genre'] == "Action" %}selected{% endif %}>Action</option>
                     <option value="Adventure" {% if film['genre'] == "Adventure" %}selected{% endif %}>Adventure</option>
                     <option value="Comedy" {% if film['genre'] == "Comedy" %}selected{% endif %}>Comedy</option>
@@ -64,7 +65,7 @@
             </div>
         </div>
         <div class="col-sm-4 col-lg-2 pb-3 text-center">
-            <!--Watched checkbox -->
+            <!-- Watched checkbox -->
             <div class="d-flex flex-sm-row align-items-center justify-content-center mt-3 gap-2">
                 <div class="form-check">
                     <input name="watched" class="form-check-input" type="checkbox" id="watched" {% if film['watched'] %}checked{% endif %}>
@@ -73,7 +74,7 @@
             </div>
         </div>
         <div class="col-sm-8 col-lg-5 text-center">
-            <!--Rating radio buttons -->
+            <!-- Rating radio buttons -->
             <label for="rating" class="form-label mt-3 me-2">Rating</label>
             <div class="btn-group" role="group" aria-label="Rating">
                 <input type="radio" class="btn-check" name="rating" id="rating1" autocomplete="off" value="1" {% if film['rating'] == 1 %}checked{% endif %}>
@@ -93,7 +94,7 @@
             </div>
         </div>
         <div class="col-12">
-            <!--Review textarea --> 
+            <!-- Review textarea -->
             <div class="form-floating">
                 <textarea name="review" class="form-control" placeholder="Leave a review here" id="review" style="height: 100px">{{ film['review'] }}</textarea>
                 <label for="review">Review</label>
@@ -108,8 +109,21 @@
 
 {% endblock %}
 
-<!--Sidebar Content -->
+<!-- Sidebar Content -->
 {% block sidebarContent %}
+
+    <!-- Film Image -->
+    <div class="card mt-3">
+        <div class="card-body text-center">
+            <h5 class="card-title">Film Poster</h5>
+            {% if not film['poster'] %}
+                <p class="text-muted">No image available</p>
+            {% else %}
+                <img src="{{ film['poster'] }}" class="card-img-top" alt="Image for {{ film['title'] }}">
+            {% endif %}
+        </div>
+    </div>
+
 
     <div class="card mt-3">
         <div class="card-body text-center ">
