@@ -1,0 +1,46 @@
+-- database: ./db/database.db
+
+SELECT * FROM films;
+-- Create Table For Actors
+CREATE TABLE IF NOT EXISTS actors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        birth_year INTEGER,
+        height FLOAT
+    );
+
+-- Create Table For Film and Actors relationships
+CREATE TABLE IF NOT EXISTS film_actors (
+        film_id INTEGER NOT NULL,
+        actor_id INTEGER NOT NULL,
+        PRIMARY KEY (film_id, actor_id),
+        FOREIGN KEY (film_id) REFERENCES films(id),
+        FOREIGN KEY (actor_id) REFERENCES actors(id)
+    );
+
+-- Insert actors
+INSERT INTO actors (name, birth_year, height) VALUES
+    ('Cary Elwes', 1962, 180),      -- The Princess Bride
+    ('Robin Wright', 1966, 168),    -- The Princess Bride
+    ('Mandy Patinkin', 1952, 180),  -- The Princess Bride
+    ('Mike Myers', 1963, 175),      -- Shrek
+    ('Eddie Murphy', 1961, 180),    -- Shrek
+    ('Cameron Diaz', 1972, 170),    -- Shrek
+    ('Elijah Wood', 1981, 168),     -- The Lord of the Rings
+    ('Ian McKellen', 1939, 175),    -- The Lord of the Rings
+    ('Viggo Mortensen', 1958, 180); -- The Lord of the Rings
+
+-- Insert relationships for actors to films via film_actors
+INSERT INTO film_actors (film_id, actor_id) VALUES
+    -- The Princess Bride (film_id = 1)
+    (1, 1),  -- Cary Elwes
+    (1, 2),  -- Robin Wright
+    (1, 3),  -- Mandy Patinkin
+    -- Shrek (film_id = 2)
+    (2, 4),  -- Mike Myers
+    (2, 5),  -- Eddie Murphy
+    (2, 6),  -- Cameron Diaz
+    -- The Lord of the Rings (film_id = 3)
+    (3, 7),  -- Elijah Wood
+    (3, 8),  -- Ian McKellen
+    (3, 9);  -- Viggo Mortensen

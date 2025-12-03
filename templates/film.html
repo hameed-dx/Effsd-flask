@@ -61,3 +61,14 @@
     </div>
 
 {% endblock %}
+
+<h4>Actors</h4>
+{% if film_actors %}
+    <ul>
+        {% for actor in film_actors %}
+            <li>{{ actor['name'] }} ({{ actor['birth_year'] }})</li>
+        {% endfor %}
+     </ul>
+{% else %}
+    <p>No actors listed for this film.</p>
+{% endif %}

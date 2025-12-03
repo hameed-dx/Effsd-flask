@@ -20,7 +20,7 @@ def inject_csrf_token():
 
 
 # Global variable for site name: Used in templates to display the site name
-siteName = "SHU EFSSD Module"
+siteName = "List Your Films!"
 # Set the site name in the app context
 @app.context_processor
 def inject_site_name():
@@ -38,7 +38,6 @@ def get_username(user_id):
 #===================
 # These define which template is loaded, or action is taken, depending on the URL requested
 #===================
-# Home Page
 # Home Page
 @app.route('/')
 def index():
@@ -162,8 +161,9 @@ def logout():
 # Films List Page
 @app.route('/films/')
 def films():
-
-    user_id = session.get('user_id')  # Get the logged-in user's ID from the session
+    
+    # Get the logged-in user's ID from the session
+    user_id = session.get('user_id')  
 
     # Ensure user is logged in to view films
     if user_id is None:
@@ -194,11 +194,11 @@ def userFilms(user_id):
 def film(id):
     
     # Get film data
-    film_data = get_film_by_id(id)  
+    film_data, film_actors, film_actor_ids = get_film_by_id(id)
 
     if film_data:
         # Render the film.html template with film details
-        return render_template('film.html', title=film_data['title'], film=film_data)
+        return render_template('film.html', title=film_data['title'], film=film_data, film_actors=film_actors)
     else:
         # If film not found, redirect to films list with a flash message
         flash(category='warning', message='Requested film not found!')
@@ -210,12 +210,17 @@ def film(id):
 # Add A Film Page
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
-
-    user = session.get('user_id')  # Get the logged-in user's ID from the session
+    
+    # Get the logged-in user's ID from the session
+    user = session.get('user_id')  
+    
     # Ensure user is logged in to add films
     if user is None:
         flash(category='warning', message='You must be logged in to add a film.')
         return redirect(url_for('login'))
+    
+    # Get all actors for the multi-select
+    all_actors = get_all_actors()
 
     # If the request method is POST, process the form submission
     if request.method == 'POST':
@@ -247,21 +252,26 @@ def create():
             return redirect(url_for('create'))
 
         # Use the database function to insert the new film
-        create_film(user, title, tagline, director, poster, release_year, genre, watched, rating, review)
+        film_id = create_film(user, title, tagline, director, poster, release_year, genre, watched, rating, review)
+
+        # Update the film actors
+        actor_ids = request.form.getlist('actor_ids')
+        update_film_actors(film_id, actor_ids)
         
         # Flash a success message
         flash(category='success', message='Created successfully!')
         return redirect(url_for('films'))
 
-    return render_template('create.html')
+    return render_template('create.html', all_actors=all_actors)
 
 
 # Edit A Film Page
 @app.route('/update/<int:id>/', methods=('GET', 'POST'))
 def update(id):
 
-    # Get film data
-    film = get_film_by_id(id)
+    # Get film and actors data
+    film, film_actors, film_actor_ids = get_film_by_id(id)
+    all_actors = get_all_actors()
 
     # Check for errors
     error = None
@@ -311,11 +321,15 @@ def update(id):
         # Use the database function to update the film
         update_film(id, title, tagline, director, poster, release_year, genre, watched, rating, review)
         
+        # Update the film actors
+        actor_ids = request.form.getlist('actor_ids')
+        update_film_actors(id, actor_ids)
+
         # Flash a success message and redirect to the index page
         flash(category='success', message='Updated successfully!')
         return redirect(url_for('film', id=id))
 
-    return render_template('update.html', film=film)
+    return render_template('update.html', film=film, film_actors=film_actors, film_actor_ids=film_actor_ids, all_actors=all_actors)
 
 
 
@@ -324,7 +338,8 @@ def update(id):
 def delete(id):
 
     # Get the film 
-    film = get_film_by_id(id)
+    film = get_film_by_id(id, include_actors=False)
+
     # Check for errors
     error = None
     if film is None:     # If film not found, add error message
@@ -340,6 +355,7 @@ def delete(id):
 
     # Use the database function to delete the film
     delete_film(id)
+    delete_film_actors(id)
     
     # Flash a success message and redirect to the index page
     flash(category='success', message='Film deleted successfully!')
